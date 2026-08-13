@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore, useCallback, useEffect } from "react";
-import { NewTask, Task } from "./types";
+import { NewTask, Task } from "../types";
 
 export const SEED_TASKS: Task[] = [
   {
