@@ -57,4 +57,4 @@ lib/
 - **No authentication / accounts.**
 - **No unit tests yet** — a test runner was not installed; I asked before adding one (the user deferred). The plan is Vitest + `@testing-library/react` for util + component tests.
 - **Dark mode** uses CSS variables (not Tailwind's `dark:` utilities, which are media-based and don't respond to a manual toggle).
-- **Not deployed** — I did not push to Vercel/Netlify. If you'd like, a one-click Vercel deploy works out of the box with `npm run build`.
+- **deployed** — vercel: https://coding-assignment-ordiple-ng6z24dpe-sumondev13s-projects.vercel.app/.
