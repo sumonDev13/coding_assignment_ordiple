@@ -38,6 +38,7 @@ export const SEED_TASKS: Task[] = [
 
 const STORAGE_KEY = "task-board:tasks";
 const CHANGE_EVENT = `${STORAGE_KEY}:change`;
+const LOADED_EVENT = `${STORAGE_KEY}:loaded`;
 
 /**
  * Module-level gate so the first client render matches the server render
@@ -45,6 +46,15 @@ const CHANGE_EVENT = `${STORAGE_KEY}:change`;
  * surfaced after mount via the dispatched CHANGE_EVENT.
  */
 let mounted = false;
+
+/**
+ * Module-level "loaded" flag, surfaced through useSyncExternalStore so the
+ * loading state can flip without calling setState inside an effect (which the
+ * react-hooks/set-state-in-effect rule forbids). Both the snapshot and the
+ * server snapshot start false (loading), and the first render still matches
+ * the server render.
+ */
+let loaded = false;
 
 /** Cached snapshot so getSnapshot is referentially stable. */
 let cachedRaw: string | null = null;
@@ -81,13 +91,25 @@ function subscribe(callback: () => void) {
   return () => window.removeEventListener(CHANGE_EVENT, callback);
 }
 
+function getLoaded(): boolean {
+  return loaded;
+}
+
+function subscribeLoaded(callback: () => void) {
+  window.addEventListener(LOADED_EVENT, callback);
+  return () => window.removeEventListener(LOADED_EVENT, callback);
+}
+
 export function useTasks() {
   const tasks = useSyncExternalStore(subscribe, readTasks, () => SEED_TASKS);
+  const isLoading = !useSyncExternalStore(subscribeLoaded, getLoaded, () => false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     mounted = true;
+    loaded = true;
     window.dispatchEvent(new Event(CHANGE_EVENT));
+    window.dispatchEvent(new Event(LOADED_EVENT));
   }, []);
 
   const addTask = useCallback((task: NewTask) => {
@@ -102,5 +124,5 @@ export function useTasks() {
     writeTasks(readTasks().filter((t) => t.id !== id));
   }, []);
 
-  return { tasks, addTask, updateTask, deleteTask, isLoaded: mounted };
+  return { tasks, addTask, updateTask, deleteTask, isLoading };
 }
