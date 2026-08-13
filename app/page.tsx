@@ -8,6 +8,7 @@ import Modal from "@/app/_components/Modal";
 import TaskCard from "@/app/_components/TaskCard";
 import TaskForm from "@/app/_components/TaskForm";
 import FilterBar, { type StatusFilter } from "@/app/_components/FilterBar";
+import DarkModeToggle from "@/app/_components/DarkModeToggle";
 
 const PlusIcon = () => (
   <svg
@@ -62,14 +63,17 @@ export default function BoardPage() {
     <>
       <Header
         actions={
-          <button
-            type="button"
-            onClick={() => setCreateOpen(true)}
-            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
-          >
-            <PlusIcon />
-            Add Task
-          </button>
+          <>
+            <DarkModeToggle />
+            <button
+              type="button"
+              onClick={() => setCreateOpen(true)}
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+            >
+              <PlusIcon />
+              Add Task
+            </button>
+          </>
         }
       />
       <main className="flex-1">

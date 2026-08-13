@@ -17,7 +17,7 @@ export default function Header({ actions }: HeaderProps) {
               A small, clean task manager.
             </p>
           </div>
-          {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
+          {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
         </div>
       </div>
     </header>
