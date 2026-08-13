@@ -40,20 +40,10 @@ const STORAGE_KEY = "task-board:tasks";
 const CHANGE_EVENT = `${STORAGE_KEY}:change`;
 const LOADED_EVENT = `${STORAGE_KEY}:loaded`;
 
-/**
- * Module-level gate so the first client render matches the server render
- * (returns SEED_TASKS), avoiding hydration mismatches. Persisted data is
- * surfaced after mount via the dispatched CHANGE_EVENT.
- */
+
 let mounted = false;
 
-/**
- * Module-level "loaded" flag, surfaced through useSyncExternalStore so the
- * loading state can flip without calling setState inside an effect (which the
- * react-hooks/set-state-in-effect rule forbids). Both the snapshot and the
- * server snapshot start false (loading), and the first render still matches
- * the server render.
- */
+
 let loaded = false;
 
 /** Cached snapshot so getSnapshot is referentially stable. */
@@ -74,16 +64,17 @@ function readTasks(): Task[] {
   }
 }
 
-function writeTasks(tasks: Task[]) {
+function writeTasks(tasks: Task[]): boolean {
   const json = JSON.stringify(tasks);
   try {
     localStorage.setItem(STORAGE_KEY, json);
   } catch {
-    /* ignore write errors (e.g. quota) */
+    return false;
   }
   cachedRaw = json;
   cachedTasks = tasks;
   window.dispatchEvent(new Event(CHANGE_EVENT));
+  return true;
 }
 
 function subscribe(callback: () => void) {
@@ -112,16 +103,16 @@ export function useTasks() {
     window.dispatchEvent(new Event(LOADED_EVENT));
   }, []);
 
-  const addTask = useCallback((task: NewTask) => {
-    writeTasks([...readTasks(), { ...task, id: crypto.randomUUID() }]);
+  const addTask = useCallback((task: NewTask): boolean => {
+    return writeTasks([...readTasks(), { ...task, id: crypto.randomUUID() }]);
   }, []);
 
-  const updateTask = useCallback((task: Task) => {
-    writeTasks(readTasks().map((t) => (t.id === task.id ? task : t)));
+  const updateTask = useCallback((task: Task): boolean => {
+    return writeTasks(readTasks().map((t) => (t.id === task.id ? task : t)));
   }, []);
 
-  const deleteTask = useCallback((id: string) => {
-    writeTasks(readTasks().filter((t) => t.id !== id));
+  const deleteTask = useCallback((id: string): boolean => {
+    return writeTasks(readTasks().filter((t) => t.id !== id));
   }, []);
 
   return { tasks, addTask, updateTask, deleteTask, isLoading };

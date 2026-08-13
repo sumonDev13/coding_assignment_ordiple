@@ -59,23 +59,33 @@ export default function BoardPage() {
   );
 
   const handleCreate = (task: NewTask) => {
-    addTask(task);
-    setCreateOpen(false);
-    addToast(`Task "${task.title}" added`, "success");
+    if (addTask(task)) {
+      setCreateOpen(false);
+      addToast(`Task "${task.title}" added`, "success");
+    } else {
+      addToast("Failed to add task", "error");
+    }
   };
 
   const handleEdit = (task: NewTask) => {
     if (!editingTask) return;
-    updateTask({ ...task, id: editingTask.id });
-    setEditingTask(null);
+    if (updateTask({ ...task, id: editingTask.id })) {
+      setEditingTask(null);
+      addToast(`Task "${task.title}" updated`, "success");
+    } else {
+      addToast("Failed to update task", "error");
+    }
   };
 
   const handleDelete = () => {
     if (!deletingTask) return;
     const { id, title } = deletingTask;
-    deleteTask(id);
-    setDeletingTask(null);
-    addToast(`Task "${title}" deleted`, "info");
+    if (deleteTask(id)) {
+      setDeletingTask(null);
+      addToast(`Task "${title}" deleted`, "info");
+    } else {
+      addToast("Failed to delete task", "error");
+    }
   };
 
   const counts = useMemo(
