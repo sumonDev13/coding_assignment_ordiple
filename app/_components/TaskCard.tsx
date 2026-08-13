@@ -1,6 +1,14 @@
+"use client";
+
 import type { Task } from "@/lib/types";
 import { formatDate, priorityLabel } from "@/lib/utils";
 import StatusBadge from "./StatusBadge";
+
+const priorityDot: Record<Task["priority"], string> = {
+  low: "bg-priority-low",
+  medium: "bg-priority-medium",
+  high: "bg-priority-high",
+};
 
 export default function TaskCard({ task }: { task: Task }) {
   return (
@@ -16,16 +24,7 @@ export default function TaskCard({ task }: { task: Task }) {
 
       <div className="mt-auto flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1">
-          <span
-            className={
-              "block h-1.5 w-1.5 rounded-full" +
-              (task.priority === "high"
-                ? "bg-priority-high"
-                : task.priority === "medium"
-                ? "bg-priority-medium"
-                : "bg-priority-low")
-            }
-          />
+          <span className={`block h-1.5 w-1.5 rounded-full ${priorityDot[task.priority]}`} />
           {priorityLabel(task.priority)}
         </span>
         {task.dueDate && <span>Due {formatDate(task.dueDate)}</span>}

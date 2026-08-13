@@ -16,6 +16,7 @@
   --color-priority-high: var(--priority-high);
   --color-priority-medium: var(--priority-medium);
   --color-priority-low: var(--priority-low);
+  --color-destructive: var(--destructive);
 }
 
 :root {
@@ -34,6 +35,7 @@
   --priority-high: #ef4444;
   --priority-medium: #f59e0b;
   --priority-low: #10b981;
+  --destructive: #ef4444;
 }
 
 html.dark {
@@ -52,6 +54,7 @@ html.dark {
   --priority-high: #f87171;
   --priority-medium: #fbbf24;
   --priority-low: #34d399;
+  --destructive: #f87171;
 }
 
 html {

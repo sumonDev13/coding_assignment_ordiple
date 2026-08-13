@@ -1,7 +1,9 @@
+"use client";
+
 import type { TaskStatus } from "@/lib/types";
 import { statusLabel } from "@/lib/utils";
 
-const badgeConfig: Record<TaskStatus, string> = {
+const dotConfig: Record<TaskStatus, string> = {
   todo: "bg-todo",
   "in-progress": "bg-in-progress",
   done: "bg-done",
@@ -21,7 +23,7 @@ export default function StatusBadge({ status }: { status: TaskStatus }) {
         ` ${textConfig[status]}`
       }
     >
-      <span className={`block h-2 w-2 rounded-full ${badgeConfig[status]}`} />
+      <span className={`block h-2 w-2 rounded-full ${dotConfig[status]}`} />
       {statusLabel(status)}
     </span>
   );
