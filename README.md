@@ -1,56 +1,60 @@
 # Task Board
 
-A small, clean task manager built with Next.js 16 (App Router), React 19, TypeScript and Tailwind CSS v4. Tasks are persisted to `localStorage` (no backend), with a `useSyncExternalStore` data layer that is hydration-safe.
+A small, clean task manager where you can create, view, edit, delete, filter, search, sort, and toggle dark mode for your tasks. Built one meaningful step at a time, with manual commits after each step.
 
-- **Create / view / edit / delete** tasks (modals + validation)
-- **Filter** by status and **search** by title (live)
-- **Sort** by due date or priority (ascending/descending)
-- **Status counts** on the filter bar (total + per status)
-- **Dark mode** toggle (CSS-variable theming, persists preference) and a **responsive** layout
-- **Loading** skeleton and contextual **empty** states
-- **Toast** notifications for add/delete actions
-- Verification per step: `tsc`, `eslint`, `next build`, plus a headless render check (no interactive E2E)
+- **CRUD** tasks in a modal form with validation (title required, min 3 chars, priority/status/due date).
+- **Filter** by status (All / To Do / In Progress / Done) and **search** by title — both live.
+- **Sort** by due date (soonest/latest) or priority (high→low / low→high), with no-due-date tasks always sorted last.
+- **Counts** shown on the filter bar (total + per status).
+- **Dark mode** toggle (CSS-variable theming, persists preference, follows OS by default) and a **responsive** layout.
+- **Loading** skeleton + contextual **empty** states ("No tasks yet" / "No tasks match").
+- **Toast** notifications (top-right, animated) for add/edit/delete, including red error toasts if a save fails (the modal stays open so you can retry).
 
-> Data lives entirely in `localStorage` and resets to a set of seed tasks when cleared.
+> Data is stored in the browser's `localStorage` and pre-seeded with a few sample tasks. Clearing your browser storage resets the board.
 
-## Getting Started
+## Tech stack
+
+- **Next.js 16** (App Router) + **React 19** + **TypeScript 5**
+- **Tailwind CSS v4** (via `@tailwindcss/postcss`)
+- **ESLint 9** with `eslint-config-next`
+- React built-ins, with a `useSyncExternalStore` data layer for `localStorage` (hydration-safe, no `setState` in effects)
+- **Zero runtime UI libraries** — icons are inline SVGs
+
+> Note: `next/font` was removed in favor of a system font stack to fix a hydration mismatch under Turbopack dev; Tailwind's `@config` CSS block is avoided (broken in the installed plugin version) in favor of `@theme inline`.
+
+## How to run locally
 
 ```bash
-npm run dev   # http://localhost:3000
-npm run build
-npm run lint
-npm test       # (placeholder until a test runner is added)
+npm install
+npm run dev      # -> http://localhost:3000
+npm run build    # production build
+npm run lint     # eslint + tsc
 ```
+
+Verification (per step): `tsc --noEmit`, `eslint .`, `next build`, and a headless render check of the page HTML. Interactive click-through testing was intentionally skipped (no Playwright/Puppeteer), pending the user's decision on a test runner.
 
 ## Project structure
 
 ```
 app/
-  layout.tsx              # Root layout: metadata, data-theme, theme inline script
-  page.tsx                # BoardPage — route, state orchestration, wiring
-  globals.css             # CSS variables (light/dark), @theme inline mappings, keyframes
   _components/
-    board/                # Board controls tied to the board page
-      FilterBar.tsx       # status filter + live search + counts
-      SortSelect.tsx      # sort-by due date / priority
-    layout/
-      Header.tsx          # Site header + actions slot
-    tasks/
-      TaskCard.tsx        # Single task card (status badge, priority, edit/delete)
-      TaskForm.tsx        # Shared create/edit form with validation
-      StatusBadge.tsx     # Colored status indicator
-    ui/
-      DarkModeToggle.tsx  # Light/dark toggle button
-      LoadingState.tsx    # Skeleton grid while data hydrates
-      EmptyState.tsx      # Reusable empty-state illustration + action
-      Modal.tsx           # Accessible modal (Esc + click-outside close)
-      Toaster.tsx         # Fixed top-right toast container
+    board/   FilterBar, SortSelect
+    layout/  Header
+    tasks/   TaskCard, TaskForm, StatusBadge
+    ui/      DarkModeToggle, EmptyState, LoadingState, Modal, Toaster
+  layout.tsx        # metadata, data-theme, theme inline script
+  page.tsx          # BoardPage — route + state orchestration
+  globals.css       # CSS variables (light/dark), @theme mappings, keyframes
 lib/
-  types.ts                # Domain types + option lists (statuses, priorities, sort)
-  utils.ts                # Pure helpers: labels, date formatting, sortTasks
-  hooks/
-    useTasks.ts           # localStorage data hook (useSyncExternalStore) + add/update/delete
-    toast.ts              # useToasts hook + imperative addToast / removeToast (useSyncExternalStore)
+  types.ts          # domain types + option lists
+  utils.ts          # pure helpers: labels, date formatting, sortTasks
+  hooks/            # useTasks (localStorage store), useToasts + addToast/removeToast
 ```
 
-Custom hooks live in `lib/hooks/` (`useTasks` for the task data layer, `useToasts` + the imperative `addToast`/`removeToast` for notifications); the `_` prefix on `app/_components/` keeps components out of the App Router route table. `lib/` meanwhile holds pure types (`types.ts`), pure utilities (`utils.ts`), and the data/state hooks (`hooks/`).
+## Assumptions & choices
+
+- **No backend** — the spec was a "simplified task manager," so data lives in `localStorage` only (persists across refresh in the same browser; not across devices or after clearing storage).
+- **No authentication / accounts.**
+- **No unit tests yet** — a test runner was not installed; I asked before adding one (the user deferred). The plan is Vitest + `@testing-library/react` for util + component tests.
+- **Dark mode** uses CSS variables (not Tailwind's `dark:` utilities, which are media-based and don't respond to a manual toggle).
+- **Not deployed** — I did not push to Vercel/Netlify. If you'd like, a one-click Vercel deploy works out of the box with `npm run build`.
