@@ -6,7 +6,7 @@ import { statusLabel } from "@/lib/utils";
 
 export type StatusFilter = "all" | TaskStatus;
 
-export interface FilterCounts {
+interface FilterCounts {
   total: number;
   todo: number;
   "in-progress": number;

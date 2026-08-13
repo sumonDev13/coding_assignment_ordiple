@@ -1,6 +1,6 @@
 "use client";
 
-import { SORT_OPTIONS, type SortDir, type SortKey } from "@/lib/types";
+import { SORT_OPTIONS, type SortDir, type SortKey, type SortOption } from "@/lib/types";
 
 export interface SortValue {
   key: SortKey;
@@ -14,7 +14,7 @@ interface SortSelectProps {
 
 const NONE = "none";
 
-function serialize(option: SortOptionish): string {
+function serialize(option: Pick<SortOption, "key" | "dir">): string {
   return `${option.key}:${option.dir}`;
 }
 
@@ -23,8 +23,6 @@ function parse(value: string): SortValue | null {
   const [key, dir] = value.split(":") as [SortKey, SortDir];
   return { key, dir };
 }
-
-type SortOptionish = { key: SortKey; dir: SortDir };
 
 export default function SortSelect({ value, onChange }: SortSelectProps) {
   return (

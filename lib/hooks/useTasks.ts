@@ -3,7 +3,7 @@
 import { useSyncExternalStore, useCallback, useEffect } from "react";
 import { NewTask, Task } from "../types";
 
-export const SEED_TASKS: Task[] = [
+const SEED_TASKS: Task[] = [
   {
     id: "1",
     title: "Design Task Board UI",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { NewTask, Task } from "@/lib/types";
 import { useTasks } from "@/lib/hooks/useTasks";
 import { addToast } from "@/lib/hooks/toast";
@@ -42,16 +42,21 @@ export default function BoardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sort, setSort] = useState<SortValue | null>(null);
 
-  const visibleTasks = tasks.filter((task) => {
-    if (statusFilter !== "all" && task.status !== statusFilter) return false;
-    const q = searchQuery.trim().toLowerCase();
-    if (q && !task.title.toLowerCase().includes(q)) return false;
-    return true;
-  });
+  const visibleTasks = useMemo(
+    () =>
+      tasks.filter((task) => {
+        if (statusFilter !== "all" && task.status !== statusFilter) return false;
+        const q = searchQuery.trim().toLowerCase();
+        if (q && !task.title.toLowerCase().includes(q)) return false;
+        return true;
+      }),
+    [tasks, statusFilter, searchQuery],
+  );
 
-  const displayTasks = sort
-    ? sortTasks(visibleTasks, sort.key, sort.dir)
-    : visibleTasks;
+  const displayTasks = useMemo(
+    () => (sort ? sortTasks(visibleTasks, sort.key, sort.dir) : visibleTasks),
+    [visibleTasks, sort],
+  );
 
   const handleCreate = (task: NewTask) => {
     addTask(task);
@@ -73,12 +78,15 @@ export default function BoardPage() {
     addToast(`Task "${title}" deleted`, "info");
   };
 
-  const counts = {
-    total: tasks.length,
-    todo: tasks.filter((t) => t.status === "todo").length,
-    "in-progress": tasks.filter((t) => t.status === "in-progress").length,
-    done: tasks.filter((t) => t.status === "done").length,
-  };
+  const counts = useMemo(
+    () => ({
+      total: tasks.length,
+      todo: tasks.filter((t) => t.status === "todo").length,
+      "in-progress": tasks.filter((t) => t.status === "in-progress").length,
+      done: tasks.filter((t) => t.status === "done").length,
+    }),
+    [tasks],
+  );
 
   return (
     <>

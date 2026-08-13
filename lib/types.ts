@@ -11,7 +11,6 @@ export interface Task {
 }
 
 export type NewTask = Omit<Task, "id">;
-export type TaskUpdate = Partial<Omit<Task, "id">> & { id: string };
 
 export const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
   { value: "todo", label: "To Do" },
