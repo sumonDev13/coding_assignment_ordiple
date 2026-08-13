@@ -26,9 +26,10 @@ const PlusIcon = () => (
 );
 
 export default function BoardPage() {
-  const { tasks, addTask, updateTask } = useTasks();
+  const { tasks, addTask, updateTask, deleteTask } = useTasks();
   const [createOpen, setCreateOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [deletingTask, setDeletingTask] = useState<Task | null>(null);
 
   const handleCreate = (task: NewTask) => {
     addTask(task);
@@ -39,6 +40,12 @@ export default function BoardPage() {
     if (!editingTask) return;
     updateTask({ ...task, id: editingTask.id });
     setEditingTask(null);
+  };
+
+  const handleDelete = () => {
+    if (!deletingTask) return;
+    deleteTask(deletingTask.id);
+    setDeletingTask(null);
   };
 
   return (
@@ -68,27 +75,19 @@ export default function BoardPage() {
                   key={task.id}
                   task={task}
                   onEdit={() => setEditingTask(task)}
+                  onDelete={() => setDeletingTask(task)}
                 />
               ))}
             </div>
           )}
         </div>
       </main>
-      <Modal
-        open={createOpen}
-        onClose={() => setCreateOpen(false)}
-        title="Add Task"
-      >
-        <TaskForm
-          onSubmit={handleCreate}
-          onCancel={() => setCreateOpen(false)}
-        />
+
+      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Add Task">
+        <TaskForm onSubmit={handleCreate} onCancel={() => setCreateOpen(false)} />
       </Modal>
-      <Modal
-        open={!!editingTask}
-        onClose={() => setEditingTask(null)}
-        title="Edit Task"
-      >
+
+      <Modal open={!!editingTask} onClose={() => setEditingTask(null)} title="Edit Task">
         {editingTask ? (
           <TaskForm
             key={editingTask.id}
@@ -97,6 +96,38 @@ export default function BoardPage() {
             onSubmit={handleEdit}
             onCancel={() => setEditingTask(null)}
           />
+        ) : null}
+      </Modal>
+
+      <Modal
+        open={!!deletingTask}
+        onClose={() => setDeletingTask(null)}
+        title="Delete task?"
+      >
+        {deletingTask ? (
+          <div className="flex flex-col gap-4">
+            <p className="text-sm">
+              Are you sure you want to delete{" "}
+              <strong className="font-medium">&quot;{deletingTask.title}&quot;</strong>
+              ? This can&apos;t be undone.
+            </p>
+            <div className="flex justify-end gap-2 border-t border-border pt-4">
+              <button
+                type="button"
+                onClick={() => setDeletingTask(null)}
+                className="rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="rounded-md bg-destructive px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         ) : null}
       </Modal>
     </>
