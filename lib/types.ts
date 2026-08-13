@@ -24,3 +24,18 @@ export const PRIORITY_OPTIONS: { value: TaskPriority; label: string }[] = [
   { value: "medium", label: "Medium" },
   { value: "high", label: "High" },
 ];
+
+export type SortKey = "dueDate" | "priority";
+export type SortDir = "asc" | "desc";
+export interface SortOption {
+  key: SortKey;
+  dir: SortDir;
+  label: string;
+}
+
+export const SORT_OPTIONS: SortOption[] = [
+  { key: "dueDate", dir: "asc", label: "Due date — soonest first" },
+  { key: "dueDate", dir: "desc", label: "Due date — latest first" },
+  { key: "priority", dir: "desc", label: "Priority — high to low" },
+  { key: "priority", dir: "asc", label: "Priority — low to high" },
+];

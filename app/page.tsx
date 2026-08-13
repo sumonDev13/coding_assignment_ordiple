@@ -3,12 +3,14 @@
 import { useState } from "react";
 import type { NewTask, Task } from "@/lib/types";
 import { useTasks } from "@/lib/useTasks";
+import { sortTasks } from "@/lib/utils";
 import Header from "@/app/_components/Header";
 import Modal from "@/app/_components/Modal";
 import TaskCard from "@/app/_components/TaskCard";
 import TaskForm from "@/app/_components/TaskForm";
 import FilterBar, { type StatusFilter } from "@/app/_components/FilterBar";
 import DarkModeToggle from "@/app/_components/DarkModeToggle";
+import SortSelect, { type SortValue } from "@/app/_components/SortSelect";
 
 const PlusIcon = () => (
   <svg
@@ -34,6 +36,7 @@ export default function BoardPage() {
   const [deletingTask, setDeletingTask] = useState<Task | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sort, setSort] = useState<SortValue | null>(null);
 
   const visibleTasks = tasks.filter((task) => {
     if (statusFilter !== "all" && task.status !== statusFilter) return false;
@@ -41,6 +44,10 @@ export default function BoardPage() {
     if (q && !task.title.toLowerCase().includes(q)) return false;
     return true;
   });
+
+  const displayTasks = sort
+    ? sortTasks(visibleTasks, sort.key, sort.dir)
+    : visibleTasks;
 
   const handleCreate = (task: NewTask) => {
     addTask(task);
@@ -84,8 +91,11 @@ export default function BoardPage() {
             query={searchQuery}
             onQuery={setSearchQuery}
           />
+          <div className="mt-4 flex justify-end">
+            <SortSelect value={sort} onChange={setSort} />
+          </div>
           <div className="mt-6">
-            {visibleTasks.length === 0 ? (
+            {displayTasks.length === 0 ? (
               <div className="py-16 text-center text-muted-foreground">
                 <p>
                   {tasks.length === 0
@@ -95,7 +105,7 @@ export default function BoardPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {visibleTasks.map((task) => (
+                {displayTasks.map((task) => (
                   <TaskCard
                     key={task.id}
                     task={task}
