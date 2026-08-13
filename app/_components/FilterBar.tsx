@@ -6,6 +6,13 @@ import { statusLabel } from "@/lib/utils";
 
 export type StatusFilter = "all" | TaskStatus;
 
+export interface FilterCounts {
+  total: number;
+  todo: number;
+  "in-progress": number;
+  done: number;
+}
+
 const dotConfig: Record<TaskStatus, string> = {
   todo: "bg-todo",
   "in-progress": "bg-in-progress",
@@ -17,9 +24,16 @@ interface FilterBarProps {
   onStatus: (status: StatusFilter) => void;
   query: string;
   onQuery: (query: string) => void;
+  counts: FilterCounts;
 }
 
-export default function FilterBar({ status, onStatus, query, onQuery }: FilterBarProps) {
+export default function FilterBar({
+  status,
+  onStatus,
+  query,
+  onQuery,
+  counts,
+}: FilterBarProps) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="relative flex-1">
@@ -39,6 +53,7 @@ export default function FilterBar({ status, onStatus, query, onQuery }: FilterBa
           value="all"
           active={status === "all"}
           onClick={() => onStatus("all")}
+          count={counts.total}
         />
         {STATUS_OPTIONS.map((opt) => (
           <FilterButton
@@ -48,6 +63,7 @@ export default function FilterBar({ status, onStatus, query, onQuery }: FilterBa
             active={status === opt.value}
             onClick={() => onStatus(opt.value)}
             dot={dotConfig[opt.value]}
+            count={counts[opt.value]}
           />
         ))}
       </div>
@@ -60,10 +76,11 @@ interface FilterButtonProps {
   value: string;
   active: boolean;
   dot?: string;
+  count: number;
   onClick: () => void;
 }
 
-function FilterButton({ label, value, active, dot, onClick }: FilterButtonProps) {
+function FilterButton({ label, value, active, dot, count, onClick }: FilterButtonProps) {
   return (
     <button
       type="button"
@@ -78,6 +95,16 @@ function FilterButton({ label, value, active, dot, onClick }: FilterButtonProps)
     >
       {dot ? <span className={`block h-1.5 w-1.5 rounded-full ${dot}`} /> : null}
       {label}
+      <span
+        className={
+          "ml-1.5 inline-flex h-5 min-w-[20px] items-center justify-center rounded-full text-xs font-semibold" +
+          (active
+            ? " bg-white/20 text-primary-foreground"
+            : " bg-muted text-muted-foreground")
+        }
+      >
+        {count}
+      </span>
     </button>
   );
 }

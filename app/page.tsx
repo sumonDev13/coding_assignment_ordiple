@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { NewTask, Task } from "@/lib/types";
 import { useTasks } from "@/lib/useTasks";
+import { addToast } from "@/lib/toast";
 import { sortTasks } from "@/lib/utils";
 import Header from "@/app/_components/Header";
 import Modal from "@/app/_components/Modal";
@@ -13,6 +14,7 @@ import DarkModeToggle from "@/app/_components/DarkModeToggle";
 import SortSelect, { type SortValue } from "@/app/_components/SortSelect";
 import LoadingState from "@/app/_components/LoadingState";
 import EmptyState from "@/app/_components/EmptyState";
+import Toaster from "@/app/_components/Toaster";
 
 const PlusIcon = () => (
   <svg
@@ -54,6 +56,7 @@ export default function BoardPage() {
   const handleCreate = (task: NewTask) => {
     addTask(task);
     setCreateOpen(false);
+    addToast(`Task "${task.title}" added`, "success");
   };
 
   const handleEdit = (task: NewTask) => {
@@ -64,8 +67,17 @@ export default function BoardPage() {
 
   const handleDelete = () => {
     if (!deletingTask) return;
-    deleteTask(deletingTask.id);
+    const { id, title } = deletingTask;
+    deleteTask(id);
     setDeletingTask(null);
+    addToast(`Task "${title}" deleted`, "info");
+  };
+
+  const counts = {
+    total: tasks.length,
+    todo: tasks.filter((t) => t.status === "todo").length,
+    "in-progress": tasks.filter((t) => t.status === "in-progress").length,
+    done: tasks.filter((t) => t.status === "done").length,
   };
 
   return (
@@ -92,6 +104,7 @@ export default function BoardPage() {
             onStatus={setStatusFilter}
             query={searchQuery}
             onQuery={setSearchQuery}
+            counts={counts}
           />
           <div className="mt-4 flex justify-end">
             <SortSelect value={sort} onChange={setSort} />
@@ -195,6 +208,8 @@ export default function BoardPage() {
           </div>
         ) : null}
       </Modal>
+
+      <Toaster />
     </>
   );
 }
