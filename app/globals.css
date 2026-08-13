@@ -13,6 +13,9 @@
   --color-todo: var(--todo);
   --color-in-progress: var(--in-progress);
   --color-done: var(--done);
+  --color-priority-high: var(--priority-high);
+  --color-priority-medium: var(--priority-medium);
+  --color-priority-low: var(--priority-low);
 }
 
 :root {
@@ -28,6 +31,9 @@
   --todo: #f59e0b;
   --in-progress: #3b82f6;
   --done: #10b981;
+  --priority-high: #ef4444;
+  --priority-medium: #f59e0b;
+  --priority-low: #10b981;
 }
 
 html.dark {
@@ -43,6 +49,9 @@ html.dark {
   --todo: #fbbf24;
   --in-progress: #60a5fa;
   --done: #34d399;
+  --priority-high: #f87171;
+  --priority-medium: #fbbf24;
+  --priority-low: #34d399;
 }
 
 html {
