@@ -40,27 +40,39 @@ const STORAGE_KEY = "task-board:tasks";
 const CHANGE_EVENT = `${STORAGE_KEY}:change`;
 
 /**
- * Module-level gate so the first client render matches the server render,
- * avoiding hydration mismatches while still reflecting persisted data.
+ * Module-level gate so the first client render matches the server render
+ * (returns SEED_TASKS), avoiding hydration mismatches. Persisted data is
+ * surfaced after mount via the dispatched CHANGE_EVENT.
  */
 let mounted = false;
+
+/** Cached snapshot so getSnapshot is referentially stable. */
+let cachedRaw: string | null = null;
+let cachedTasks: Task[] = SEED_TASKS;
 
 function readTasks(): Task[] {
   if (!mounted) return SEED_TASKS;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Task[]) : SEED_TASKS;
+    if (raw !== cachedRaw) {
+      cachedRaw = raw;
+      cachedTasks = raw ? (JSON.parse(raw) as Task[]) : SEED_TASKS;
+    }
+    return cachedTasks;
   } catch {
     return SEED_TASKS;
   }
 }
 
 function writeTasks(tasks: Task[]) {
+  const json = JSON.stringify(tasks);
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    localStorage.setItem(STORAGE_KEY, json);
   } catch {
     /* ignore write errors (e.g. quota) */
   }
+  cachedRaw = json;
+  cachedTasks = tasks;
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
 
@@ -73,16 +85,9 @@ export function useTasks() {
   const tasks = useSyncExternalStore(subscribe, readTasks, () => SEED_TASKS);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     mounted = true;
-    try {
-      if (typeof localStorage === "undefined") return;
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_TASKS));
-      }
-      window.dispatchEvent(new Event(CHANGE_EVENT));
-    } catch {
-      /* no-op */
-    }
+    window.dispatchEvent(new Event(CHANGE_EVENT));
   }, []);
 
   const addTask = useCallback((task: NewTask) => {
