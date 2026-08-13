@@ -73,6 +73,13 @@ export default function BoardPage() {
     addToast(`Task "${title}" deleted`, "info");
   };
 
+  const counts = {
+    total: tasks.length,
+    todo: tasks.filter((t) => t.status === "todo").length,
+    "in-progress": tasks.filter((t) => t.status === "in-progress").length,
+    done: tasks.filter((t) => t.status === "done").length,
+  };
+
   return (
     <>
       <Header
@@ -97,6 +104,7 @@ export default function BoardPage() {
             onStatus={setStatusFilter}
             query={searchQuery}
             onQuery={setSearchQuery}
+            counts={counts}
           />
           <div className="mt-4 flex justify-end">
             <SortSelect value={sort} onChange={setSort} />
