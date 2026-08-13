@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { NewTask } from "@/lib/types";
+import type { NewTask, Task } from "@/lib/types";
 import { useTasks } from "@/lib/useTasks";
 import Header from "@/app/_components/Header";
 import Modal from "@/app/_components/Modal";
@@ -26,12 +26,19 @@ const PlusIcon = () => (
 );
 
 export default function BoardPage() {
-  const { tasks, addTask } = useTasks();
+  const { tasks, addTask, updateTask } = useTasks();
   const [createOpen, setCreateOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const handleCreate = (task: NewTask) => {
     addTask(task);
     setCreateOpen(false);
+  };
+
+  const handleEdit = (task: NewTask) => {
+    if (!editingTask) return;
+    updateTask({ ...task, id: editingTask.id });
+    setEditingTask(null);
   };
 
   return (
@@ -57,14 +64,40 @@ export default function BoardPage() {
           ) : (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {tasks.map((task) => (
-                <TaskCard key={task.id} task={task} />
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  onEdit={() => setEditingTask(task)}
+                />
               ))}
             </div>
           )}
         </div>
       </main>
-      <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Add Task">
-        <TaskForm onSubmit={handleCreate} onCancel={() => setCreateOpen(false)} />
+      <Modal
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+        title="Add Task"
+      >
+        <TaskForm
+          onSubmit={handleCreate}
+          onCancel={() => setCreateOpen(false)}
+        />
+      </Modal>
+      <Modal
+        open={!!editingTask}
+        onClose={() => setEditingTask(null)}
+        title="Edit Task"
+      >
+        {editingTask ? (
+          <TaskForm
+            key={editingTask.id}
+            initialTask={editingTask}
+            submitLabel="Save changes"
+            onSubmit={handleEdit}
+            onCancel={() => setEditingTask(null)}
+          />
+        ) : null}
       </Modal>
     </>
   );
