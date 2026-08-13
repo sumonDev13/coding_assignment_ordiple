@@ -11,6 +11,8 @@ import TaskForm from "@/app/_components/TaskForm";
 import FilterBar, { type StatusFilter } from "@/app/_components/FilterBar";
 import DarkModeToggle from "@/app/_components/DarkModeToggle";
 import SortSelect, { type SortValue } from "@/app/_components/SortSelect";
+import LoadingState from "@/app/_components/LoadingState";
+import EmptyState from "@/app/_components/EmptyState";
 
 const PlusIcon = () => (
   <svg
@@ -30,7 +32,7 @@ const PlusIcon = () => (
 );
 
 export default function BoardPage() {
-  const { tasks, addTask, updateTask, deleteTask } = useTasks();
+  const { tasks, addTask, updateTask, deleteTask, isLoading } = useTasks();
   const [createOpen, setCreateOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [deletingTask, setDeletingTask] = useState<Task | null>(null);
@@ -95,14 +97,41 @@ export default function BoardPage() {
             <SortSelect value={sort} onChange={setSort} />
           </div>
           <div className="mt-6">
-            {displayTasks.length === 0 ? (
-              <div className="py-16 text-center text-muted-foreground">
-                <p>
-                  {tasks.length === 0
-                    ? "No tasks yet. Add one to get started."
-                    : "No tasks match your filter. Try another status or search term."}
-                </p>
-              </div>
+            {isLoading ? (
+              <LoadingState />
+            ) : displayTasks.length === 0 ? (
+              <EmptyState
+                title={tasks.length === 0 ? "No tasks yet" : "No tasks match"}
+                description={
+                  tasks.length === 0
+                    ? "Add a task to get started."
+                    : "Try adjusting your status filter or search term."
+                }
+                action={
+                  tasks.length === 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => setCreateOpen(true)}
+                      className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+                    >
+                      <PlusIcon />
+                      Add Task
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setStatusFilter("all");
+                        setSearchQuery("");
+                        setSort(null);
+                      }}
+                      className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
+                    >
+                      Clear filters
+                    </button>
+                  )
+                }
+              />
             ) : (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {displayTasks.map((task) => (
