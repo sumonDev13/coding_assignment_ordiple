@@ -7,6 +7,7 @@ import Header from "@/app/_components/Header";
 import Modal from "@/app/_components/Modal";
 import TaskCard from "@/app/_components/TaskCard";
 import TaskForm from "@/app/_components/TaskForm";
+import FilterBar, { type StatusFilter } from "@/app/_components/FilterBar";
 
 const PlusIcon = () => (
   <svg
@@ -30,6 +31,15 @@ export default function BoardPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [deletingTask, setDeletingTask] = useState<Task | null>(null);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const visibleTasks = tasks.filter((task) => {
+    if (statusFilter !== "all" && task.status !== statusFilter) return false;
+    const q = searchQuery.trim().toLowerCase();
+    if (q && !task.title.toLowerCase().includes(q)) return false;
+    return true;
+  });
 
   const handleCreate = (task: NewTask) => {
     addTask(task);
@@ -64,22 +74,34 @@ export default function BoardPage() {
       />
       <main className="flex-1">
         <div className="container mx-auto max-w-5xl px-4 py-8">
-          {tasks.length === 0 ? (
-            <div className="py-16 text-center text-muted-foreground">
-              <p>No tasks yet. Add one to get started.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {tasks.map((task) => (
-                <TaskCard
-                  key={task.id}
-                  task={task}
-                  onEdit={() => setEditingTask(task)}
-                  onDelete={() => setDeletingTask(task)}
-                />
-              ))}
-            </div>
-          )}
+          <FilterBar
+            status={statusFilter}
+            onStatus={setStatusFilter}
+            query={searchQuery}
+            onQuery={setSearchQuery}
+          />
+          <div className="mt-6">
+            {visibleTasks.length === 0 ? (
+              <div className="py-16 text-center text-muted-foreground">
+                <p>
+                  {tasks.length === 0
+                    ? "No tasks yet. Add one to get started."
+                    : "No tasks match your filter. Try another status or search term."}
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {visibleTasks.map((task) => (
+                  <TaskCard
+                    key={task.id}
+                    task={task}
+                    onEdit={() => setEditingTask(task)}
+                    onDelete={() => setDeletingTask(task)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </main>
 
