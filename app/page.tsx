@@ -2,16 +2,16 @@
 
 import { useMemo, useState } from "react";
 import type { NewTask, Task } from "@/lib/types";
-import { useTasks } from "@/lib/hooks/useTasks";
+import { useTasks } from "@/features/tasks/hooks/useTasks";
 import { addToast } from "@/lib/hooks/toast";
 import { sortTasks } from "@/lib/utils";
 import Header from "@/components/layout/Header";
 import Modal from "@/components/ui/Modal";
-import TaskCard from "@/components/tasks/TaskCard";
-import TaskForm from "@/components/tasks/TaskForm";
-import FilterBar, { type StatusFilter } from "@/components/board/FilterBar";
+import TaskCard from "@/features/tasks/components/TaskCard";
+import TaskForm from "@/features/tasks/components/TaskForm";
+import FilterBar, { type StatusFilter } from "@/features/tasks/components/FilterBar";
 import DarkModeToggle from "@/components/ui/DarkModeToggle";
-import SortSelect, { type SortValue } from "@/components/board/SortSelect";
+import SortSelect, { type SortValue } from "@/features/tasks/components/SortSelect";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
 import Toaster from "@/components/ui/Toaster";
