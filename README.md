@@ -37,14 +37,14 @@ Verification (per step): `tsc --noEmit`, `eslint .`, `next build`, and a headles
 
 ```
 app/
-  _components/
-    board/   FilterBar, SortSelect
-    layout/  Header
-    tasks/   TaskCard, TaskForm, StatusBadge
-    ui/      DarkModeToggle, EmptyState, LoadingState, Modal, Toaster
   layout.tsx        # metadata, data-theme, theme inline script
   page.tsx          # BoardPage — route + state orchestration
   globals.css       # CSS variables (light/dark), @theme mappings, keyframes
+components/          # shared, reusable UI 
+  board/   FilterBar, SortSelect
+  layout/  Header
+  tasks/   TaskCard, TaskForm, StatusBadge
+  ui/      DarkModeToggle, EmptyState, LoadingState, Modal, Toaster
 lib/
   types.ts          # domain types + option lists
   utils.ts          # pure helpers: labels, date formatting, sortTasks
@@ -57,4 +57,4 @@ lib/
 - **No authentication / accounts.**
 - **No unit tests yet** — a test runner was not installed; I asked before adding one (the user deferred). The plan is Vitest + `@testing-library/react` for util + component tests.
 - **Dark mode** uses CSS variables (not Tailwind's `dark:` utilities, which are media-based and don't respond to a manual toggle).
-- **deployed** — vercel: https://coding-assignment-ordiple-ng6z24dpe-sumondev13s-projects.vercel.app/.
+- **deployed** — vercel: https://coding-assignment-ordiple-ng6z24dpe-sumondev13s-projects.vercel.app/

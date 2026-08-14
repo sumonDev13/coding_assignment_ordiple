@@ -5,16 +5,16 @@ import type { NewTask, Task } from "@/lib/types";
 import { useTasks } from "@/lib/hooks/useTasks";
 import { addToast } from "@/lib/hooks/toast";
 import { sortTasks } from "@/lib/utils";
-import Header from "@/app/_components/layout/Header";
-import Modal from "@/app/_components/ui/Modal";
-import TaskCard from "@/app/_components/tasks/TaskCard";
-import TaskForm from "@/app/_components/tasks/TaskForm";
-import FilterBar, { type StatusFilter } from "@/app/_components/board/FilterBar";
-import DarkModeToggle from "@/app/_components/ui/DarkModeToggle";
-import SortSelect, { type SortValue } from "@/app/_components/board/SortSelect";
-import LoadingState from "@/app/_components/ui/LoadingState";
-import EmptyState from "@/app/_components/ui/EmptyState";
-import Toaster from "@/app/_components/ui/Toaster";
+import Header from "@/components/layout/Header";
+import Modal from "@/components/ui/Modal";
+import TaskCard from "@/components/tasks/TaskCard";
+import TaskForm from "@/components/tasks/TaskForm";
+import FilterBar, { type StatusFilter } from "@/components/board/FilterBar";
+import DarkModeToggle from "@/components/ui/DarkModeToggle";
+import SortSelect, { type SortValue } from "@/components/board/SortSelect";
+import LoadingState from "@/components/ui/LoadingState";
+import EmptyState from "@/components/ui/EmptyState";
+import Toaster from "@/components/ui/Toaster";
 
 const PlusIcon = () => (
   <svg
