@@ -1,5 +1,5 @@
-import type { Task, TaskPriority, TaskStatus, SortDir, SortKey } from "./types";
-import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "./types";
+import type { Task, TaskPriority, TaskStatus, SortDir, SortKey } from "../types/types";
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "../types/types";
 
 export const PRIORITY_ORDER: Record<TaskPriority, number> = {
   low: 1,

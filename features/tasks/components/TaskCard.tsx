@@ -1,6 +1,6 @@
 "use client";
 
-import type { Task } from "@/lib/types";
+import type { Task } from "@/types/types";
 import { formatDate, priorityLabel } from "@/lib/utils";
 import StatusBadge from "./StatusBadge";
 

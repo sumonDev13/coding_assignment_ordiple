@@ -1,6 +1,6 @@
 "use client";
 
-import type { TaskStatus } from "@/lib/types";
+import type { TaskStatus } from "@/types/types";
 import { statusLabel } from "@/lib/utils";
 
 const dotConfig: Record<TaskStatus, string> = {

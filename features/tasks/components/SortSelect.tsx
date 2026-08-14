@@ -1,6 +1,6 @@
 "use client";
 
-import { SORT_OPTIONS, type SortDir, type SortKey, type SortOption } from "@/lib/types";
+import { SORT_OPTIONS, type SortDir, type SortKey, type SortOption } from "@/types/types";
 
 export interface SortValue {
   key: SortKey;

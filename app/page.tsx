@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { NewTask, Task } from "@/lib/types";
+import type { NewTask, Task } from "@/types/types";
 import { useTasks } from "@/features/tasks/hooks/useTasks";
 import { addToast } from "@/hooks/toast";
 import { sortTasks } from "@/lib/utils";
