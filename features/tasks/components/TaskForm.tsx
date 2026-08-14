@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import type { NewTask, TaskPriority, TaskStatus } from "@/lib/types";
-import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "@/lib/types";
+import type { NewTask, TaskPriority, TaskStatus } from "@/types/types";
+import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "@/types/types";
 
 export interface TaskFormProps {
   initialTask?: Partial<NewTask>;

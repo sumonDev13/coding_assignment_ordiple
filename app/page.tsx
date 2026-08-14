@@ -1,37 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { NewTask, Task } from "@/lib/types";
-import { useTasks } from "@/lib/hooks/useTasks";
-import { addToast } from "@/lib/hooks/toast";
+import type { NewTask, Task } from "@/types/types";
+import { useTasks } from "@/features/tasks/hooks/useTasks";
+import { addToast } from "@/hooks/toast";
 import { sortTasks } from "@/lib/utils";
 import Header from "@/components/layout/Header";
 import Modal from "@/components/ui/Modal";
-import TaskCard from "@/components/tasks/TaskCard";
-import TaskForm from "@/components/tasks/TaskForm";
-import FilterBar, { type StatusFilter } from "@/components/board/FilterBar";
+import TaskCard from "@/features/tasks/components/TaskCard";
+import TaskForm from "@/features/tasks/components/TaskForm";
+import FilterBar, { type StatusFilter } from "@/features/tasks/components/FilterBar";
 import DarkModeToggle from "@/components/ui/DarkModeToggle";
-import SortSelect, { type SortValue } from "@/components/board/SortSelect";
+import SortSelect, { type SortValue } from "@/features/tasks/components/SortSelect";
 import LoadingState from "@/components/ui/LoadingState";
 import EmptyState from "@/components/ui/EmptyState";
+import { PlusIcon } from "@/components/icons";
 import Toaster from "@/components/ui/Toaster";
-
-const PlusIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <line x1="12" y1="5" x2="12" y2="19" />
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
 
 export default function BoardPage() {
   const { tasks, addTask, updateTask, deleteTask, isLoading } = useTasks();

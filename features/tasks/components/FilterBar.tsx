@@ -1,7 +1,8 @@
 "use client";
 
-import type { TaskStatus } from "@/lib/types";
-import { STATUS_OPTIONS } from "@/lib/types";
+import { SearchIcon } from "@/components/icons";
+import type { TaskStatus } from "@/types/types";
+import { STATUS_OPTIONS } from "@/types/types";
 import { statusLabel } from "@/lib/utils";
 
 export type StatusFilter = "all" | TaskStatus;
@@ -109,22 +110,3 @@ function FilterButton({ label, value, active, dot, count, onClick }: FilterButto
   );
 }
 
-function SearchIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
-}
