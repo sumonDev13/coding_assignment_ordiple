@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import type { NewTask, Task } from "@/lib/types";
 import { useTasks } from "@/features/tasks/hooks/useTasks";
-import { addToast } from "@/lib/hooks/toast";
+import { addToast } from "@/hooks/toast";
 import { sortTasks } from "@/lib/utils";
 import Header from "@/components/layout/Header";
 import Modal from "@/components/ui/Modal";

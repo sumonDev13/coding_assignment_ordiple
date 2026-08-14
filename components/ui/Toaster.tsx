@@ -1,6 +1,6 @@
 "use client";
 
-import { useToasts, removeToast, type Toast, type ToastType } from "@/lib/hooks/toast";
+import { useToasts, removeToast, type Toast, type ToastType } from "@/hooks/toast";
 
 const typeBorder: Record<ToastType, string> = {
   success: "border-l-green-500",
