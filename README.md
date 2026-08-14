@@ -37,18 +37,45 @@ Verification (per step): `tsc --noEmit`, `eslint .`, `next build`, and a headles
 
 ```
 app/
+  favicon.ico
   layout.tsx        # metadata, data-theme, theme inline script
   page.tsx          # BoardPage — route + state orchestration
   globals.css       # CSS variables (light/dark), @theme mappings, keyframes
-components/          # shared, reusable UI 
-  board/   FilterBar, SortSelect
-  layout/  Header
-  tasks/   TaskCard, TaskForm, StatusBadge
-  ui/      DarkModeToggle, EmptyState, LoadingState, Modal, Toaster
+components/          # shared, reusable UI
+  icons/            # inline SVG icon components
+    InboxIcon.tsx
+    MoonIcon.tsx
+    PencilIcon.tsx
+    PlusIcon.tsx
+    SearchIcon.tsx
+    SunIcon.tsx
+    TrashIcon.tsx
+    XIcon.tsx
+    index.ts
+  layout/           # layout-level components
+    Header.tsx
+  ui/               # shared UI primitives
+    DarkModeToggle.tsx
+    EmptyState.tsx
+    LoadingState.tsx
+    Modal.tsx
+    Toaster.tsx
+features/
+  tasks/            # feature-sliced: tasks feature
+    components/
+      FilterBar.tsx
+      SortSelect.tsx
+      StatusBadge.tsx
+      TaskCard.tsx
+      TaskForm.tsx
+    hooks/
+      useTasks.ts
+hooks/
+  toast.ts          # toast store (addToast / removeToast / useToasts)
 lib/
-  types.ts          # domain types + option lists
   utils.ts          # pure helpers: labels, date formatting, sortTasks
-  hooks/            # useTasks (localStorage store), useToasts + addToast/removeToast
+types/
+  types.ts          # domain types + option lists
 ```
 
 ## Assumptions & choices
